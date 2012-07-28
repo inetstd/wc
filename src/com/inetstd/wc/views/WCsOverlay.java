@@ -50,7 +50,7 @@ public class WCsOverlay extends ItemizedOverlay<OverlayItem> {
 	public synchronized void updateLocations(List<WC> newWcs) {
 		for (WC wc : newWcs) {			
 			GeoPoint point = new GeoPoint(wc.getLat(), wc.getLng());
-			Log.i("WCsOverlay", "create " + point.getLatitudeE6() + " " + point.getLongitudeE6());
+
 			OverlayItem overlayitem = new OverlayItem(point, wc.getName(), "Service: " + wc.getConfort());
 			overlayitem.setMarker(defaultMarker);
 			overlays.add(overlayitem);

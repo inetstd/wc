@@ -1,4 +1,4 @@
-package com.inetstd.wc.views.adapters;
+ package com.inetstd.wc.views.adapters;
 
 import java.util.HashMap;
 import java.util.Map;

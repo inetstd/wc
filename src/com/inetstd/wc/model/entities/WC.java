@@ -9,6 +9,7 @@ public class WC{
 	int confort;
 	int lat;
 	int lng;
+	double distance;
 	
 	
 	public String getName() {
@@ -50,4 +51,18 @@ public class WC{
 	
 		this.lng = lng;
 	}
+
+	
+	public double getDistance() {
+	
+		return distance;
+	}
+
+	
+	public void setDistance(double distance) {
+	
+		this.distance = distance;
+	}
+	
+	
 }

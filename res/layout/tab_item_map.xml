@@ -2,13 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:orientation="vertical" 
-	>	
-	<com.google.android.maps.MapView
+	android:orientation="vertical"
+	android:weightSum="2" 
+	>		
+	<com.inetstd.wc.views.EventableMapView
 		android:id="@+id/map"
 		android:layout_width="fill_parent"
-		android:layout_height="180dp"		
+		android:layout_height="0dp"
+		android:layout_weight="1"	
 		android:apiKey="@string/map_api_key"
 		android:clickable="true"
 		android:saveEnabled="true" />
+	<ListView
+		android:id="@android:id/list"
+    android:layout_width="fill_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1" 
+		></ListView>
 </LinearLayout>

@@ -29,10 +29,10 @@ import com.inetstd.wc.views.MapViewPager;
 import com.inetstd.wc.views.WCsOverlay;
 import com.inetstd.wc.views.adapters.MainPagerAdapter;
 
-public class LandingActivity extends SherlockFragmentActivity implements ActionBar.TabListener, LoaderCallbacks<List<WC>>, MainPagerAdapter.MapViewConnector {
+public class WCActivity extends SherlockFragmentActivity implements LoaderCallbacks<List<WC>> {
     /** Called when the activity is first created. */
 	
-	public static final String LOG_TAG = LandingActivity.class.getSimpleName();
+	public static final String LOG_TAG = WCActivity.class.getSimpleName();
 	
 	LocationManager locationManager;
 	
@@ -69,9 +69,7 @@ public class LandingActivity extends SherlockFragmentActivity implements ActionB
 				Log.i(LOG_TAG, "set location!! ");
 				GeoPoint geoPoint = new GeoPoint((int)Math.round(location.getLatitude() * 1E6), (int)Math.round(location.getLongitude() * 1E6));
 				mapView.getController().setCenter(geoPoint);
-				mapView.getController().setZoom(18);
-				
-				
+				mapView.getController().setZoom(18);			
 			}
 		}
 	};
@@ -81,105 +79,18 @@ public class LandingActivity extends SherlockFragmentActivity implements ActionB
         setTheme(R.style.Theme_Sherlock); //Used for theme switching in samples
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.tab_content);        
+        setContentView(R.layout.tab_item_map);        
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         
-        mainPagerAdapter = new MainPagerAdapter(this, this);               
-        viewPager = (MapViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(mainPagerAdapter);
-        
-        
+               
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
         
         Log.i(LOG_TAG, "try to get location>>> ");
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-                            
-        for (int i = 1; i <= 3; i++) {
-            ActionBar.Tab tab = getSupportActionBar().newTab();
-            tab.setText("Tab " + i);
-            tab.setTabListener(this);
-            getSupportActionBar().addTab(tab);
-        }              
-        
-        
         
     }
 
-    @Override
-    public void onTabReselected(Tab tab, FragmentTransaction transaction) {
-    }
-
-    @Override
-    public void onTabSelected(Tab tab, FragmentTransaction transaction) {
-     //   mSelected.setText("Selected: " + tab.getText());
-    }
-
-    @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction transaction) {
-    }
-//
-//	@Override
-//	protected boolean isRouteDisplayed() {
-//
-//		return false;
-//	}
-
-	@Override
-	public Loader<List<WC>> onCreateLoader(int arg0, Bundle arg1) {
-		Log.i(LOG_TAG, "create loader for wcs");
-		return new WCAsyncLoader(getApplicationContext(), getString(R.string.wc_data_file_path));
-	}
-	
-	
-	
-
-	@Override
-	public void onLoadFinished(Loader<List<WC>> arg0, List<WC> pwcs) {
-		wcs.clear();
-		wcs.addAll(pwcs);
-		//Log.i(LOG_TAG, "recieved wcs " + wcs.size());
-	
-		
-		wcsOverlay.updateLocations(wcs);
-		
-		redrawList();
-	}
-		
-	@Override
-	public void onLoaderReset(Loader<List<WC>> arg0) {
-	}
-
-	@Override
-	protected boolean isRouteDisplayed() {
-
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	private void redrawList() {
-		for (WC wc : wcs) {
-			double distance = mapView.distTo(new GeoPoint(wc.getLat(), wc.getLng()));
-			if (distance < 0.5) {
-				Log.i(LOG_TAG, "wc " + wc.getName());				
-			}
-			wc.setDistance(distance);
-		}
-		
-		Collections.sort(wcs, new Comparator<WC>() {
-
-			@Override
-			public int compare(WC lhs, WC rhs) {
-				if (lhs.getDistance() < rhs.getDistance()) return 1;
-				else return -1;
-			}
-		});
-		
-
-	}
-
-	@Override
-	public void onMapLoaded(MapView mapView) {
+	private void load() {
 		Log.i(LOG_TAG, "onMapLoaded got map instance");		
 		this.mapView = (EventableMapView) mapView;
 		this.mapView.setOnChangeListener(new EventableMapView.OnChangeListener() {
@@ -229,12 +140,63 @@ public class LandingActivity extends SherlockFragmentActivity implements ActionB
         
         Log.i(LOG_TAG, "start loading wcs");
         getSupportLoaderManager().restartLoader(123123, null, this);
+
 		
+	}
+	
+	
+	@Override
+	public Loader<List<WC>> onCreateLoader(int arg0, Bundle arg1) {
+		Log.i(LOG_TAG, "create loader for wcs");
+		return new WCAsyncLoader(getApplicationContext(), getString(R.string.wc_data_file_path));
+	}
+	
+	
+	
+
+	@Override
+	public void onLoadFinished(Loader<List<WC>> arg0, List<WC> pwcs) {
+		wcs.clear();
+
+		wcs.addAll(pwcs);
+		//Log.i(LOG_TAG, "recieved wcs " + wcs.size());
+	
+		
+		wcsOverlay.updateLocations(wcs);
+		
+		redrawList();
+	}
+		
+	@Override
+	public void onLoaderReset(Loader<List<WC>> arg0) {
 	}
 
 	@Override
-	public void onMapUnLoaded(MapView mapView) {
+	protected boolean isRouteDisplayed() {
+
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
+	private void redrawList() {
+		for (WC wc : wcs) {
+			double distance = mapView.distTo(new GeoPoint(wc.getLat(), wc.getLng()));
+			if (distance < 0.5) {
+				Log.i(LOG_TAG, "wc " + wc.getName());				
+			}
+			wc.setDistance(distance);
+		}
+		
+		Collections.sort(wcs, new Comparator<WC>() {
+
+			@Override
+			public int compare(WC lhs, WC rhs) {
+				if (lhs.getDistance() < rhs.getDistance()) return 1;
+				else return -1;
+			}
+		});
+		
+
 	}
 	
 }
