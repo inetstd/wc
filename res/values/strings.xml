@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, LandingActivity!</string>
-    <string name="app_name">WC</string>
-    <string name="wc_data_file_path">data.js</string>
-    <string name="map_api_key">0el6OVcSiOlpoltINoIsDkpi93y3kLlX7SXaCFQ</string>
-
+	<string name="hello">Hello World, LandingActivity!</string>
+	<string name="app_name">WC</string>
+	<string name="wc_data_file_path">data.js</string>
+	<string name="map_api_key">0el6OVcSiOlrzg6OGl6i42N8YpHLb_bGuOMAN2g</string>
 </resources>
